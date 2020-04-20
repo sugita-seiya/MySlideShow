@@ -16,6 +16,7 @@
   const mainImage = document.getElementById('main');
   mainImage.src = images[currentIndex];
 
+  // ボタンをクリックしたらメイン画像が切り替わる
   images.forEach((image, index) => {
     const img = document.createElement('img');
     img.src = image;
@@ -36,6 +37,7 @@
     document.querySelector('.thumbnails').appendChild(li);
   });
 
+  // 次ボタンを押すとスライドが進む
   const next = document.getElementById('next');
   next.addEventListener('click', () => {
     let target = currentIndex + 1;
@@ -43,5 +45,40 @@
       target = 0;
     }
     document.querySelectorAll('.thumbnails > li')[target].click();
+  });
+
+  // 前ボタンを押すと、スライドが戻る
+  const prev = document.getElementById('prev');
+  prev.addEventListener('click', () => {
+    let target = currentIndex - 1;
+    if (target < 0) {
+      target = images.length - 1;
+    }
+    document.querySelectorAll('.thumbnails > li')[target].click();
+  });
+
+
+  // playを押したら1秒毎にスライドを切り替え
+  let timeoutId;
+  function playSlideshow() {
+    timeoutId = setTimeout(() => {
+      next.click();
+      playSlideshow();
+    }, 1000);
+  }
+
+
+  // スライドショーを停止する
+  let isPlaying = false;
+  const play = document.getElementById('play');
+  play.addEventListener('click', () => {
+    if (isPlaying === false) {
+      playSlideshow();
+      play.textContent = 'Pause';
+    } else {
+      clearTimeout(timeoutId);
+      play.textContent = 'Play';
+    }
+    isPlaying = !isPlaying;
   });
 }
